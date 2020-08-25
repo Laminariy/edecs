@@ -21,6 +21,21 @@ def test():
         >>> player._id = 5
         >>> print(player.id)
         5
+        >>> player['health'] = 7
+        >>> print(player['health'])
+        7
+
+        >>> class Skeleton(Entity):
+        ...     default_entity_type = "Skeleton-Archer"
+        ...     default_components = {'health': 10}
+        ...
+
+        >>> skeleton = Skeleton("skeleton-001")
+        >>> print(skeleton)
+        <Entity:Skeleton-Archer, skeleton-001:no_id>
+        {'health': 10}
+        >>> print(skeleton.health)
+        10
     '''
 
     doctest.testmod()

@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../..')
 import doctest
-from models.entity import Entity
+from edecs import Entity
 
 def test():
     '''
@@ -10,9 +10,9 @@ def test():
         >>> print(player['health'])
         10
         >>> player
-        <Entity:Entity, player:no_id>
+        <Entity:Entity; player:no_id>
         >>> print(player)
-        <Entity:Entity, player:no_id>
+        <Entity:Entity; player:no_id>
         {'health': 10}
         >>> print(player.id)
         no_id
@@ -32,7 +32,7 @@ def test():
 
         >>> skeleton = Skeleton("skeleton-001")
         >>> print(skeleton)
-        <Entity:Skeleton-Archer, skeleton-001:no_id>
+        <Entity:Skeleton-Archer; skeleton-001:no_id>
         {'health': 10}
         >>> print(skeleton.health)
         10

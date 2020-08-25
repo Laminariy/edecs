@@ -3,7 +3,7 @@ from copy import deepcopy
 
 class Entity():
     '''Base entity class'''
-    
+
     __slots__ = ['_type', '_id', '_name', '_components',
                  '_entity_manager', '_component_manager']
 
@@ -42,10 +42,10 @@ class Entity():
         self._component_manager = None
 
     def __repr__(self):
-        return "<Entity:{}, {}:{}>".format(self._type, self._name, self._id)
+        return "<Entity:{}; {}:{}>".format(self._type, self._name, self._id)
 
     def __str__(self):
-        ent = "<Entity:{}, {}:{}>".format(self._type, self._name, self._id)
+        ent = "<Entity:{}; {}:{}>".format(self._type, self._name, self._id)
         components = self._components
         # TO DO: return repr of component
         return "{}\n{}".format(ent, components)

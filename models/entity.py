@@ -1,15 +1,14 @@
+from copy import deepcopy
+
+
 class Entity():
-    '''
-        Сущность. Знает свой айди, имя и компоненты. Можно наследовать и
-        задавать тип и компоненты. Можно создать экземпляр "чистой" сущности.
-        1) Инициализируется через менеджер или встроенную функцию
-        2) При инициализации сущности инициализируются все подключенные компо-
-                                                                          ненты.
-        3) Компоненты хранятся в виде объектов
-        4) Инициализация - значит привязка к менеджерам
-    '''
+    '''Base entity class'''
+    
     __slots__ = ['_type', '_id', '_name', '_components',
                  '_entity_manager', '_component_manager']
+
+    default_entity_type = None
+    default_components = {}
 
     @property
     def type(self):
@@ -27,12 +26,20 @@ class Entity():
     def components(self):
         return self._components
 
+    @property
+    def initialized(self):
+        return self._entity_manager and self._component_manager
 
-    def __init__(self, name, type="Entity"):
-        self._type = type
+
+    def __init__(self, name, entity_type=None):
+        self._type = entity_type or self.default_entity_type or type(self).__name__
+
         self._id = 'no_id'
         self._name = name
-        self._components = {}
+        self._components = deepcopy(self.default_components)
+
+        self._entity_manager = None
+        self._component_manager = None
 
     def __repr__(self):
         return "<Entity:{}, {}:{}>".format(self._type, self._name, self._id)
@@ -64,8 +71,12 @@ class Entity():
             self._components[key] = value
 
 
-    def init(self, entity_manager, component_manager):
+    def create(self, entity_manager, component_manager):
         self._entity_manager = entity_manager
         self._component_manager = component_manager
 
         # TO DO: add entity and components into managers
+
+    def destroy(self):
+        # TO DO: destroy entity and all components
+        pass

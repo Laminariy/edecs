@@ -36,6 +36,9 @@ def test():
         {'health': 10}
         >>> print(skeleton.health)
         10
+        >>> skeleton.a = 10
+        >>> print(skeleton.a)
+        10
     '''
 
     doctest.testmod()

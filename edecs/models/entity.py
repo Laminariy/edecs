@@ -10,6 +10,7 @@ class Entity():
     default_entity_type = None
     default_components = {}
 
+
     @property
     def type(self):
         return self._type
@@ -30,9 +31,11 @@ class Entity():
     def initialized(self):
         return self._entity_manager and self._component_manager
 
+    # TO DO: look __new__ function in tutorial (append __slots__)
 
     def __init__(self, name, entity_type=None):
-        self._type = entity_type or self.default_entity_type or type(self).__name__
+        self._type = entity_type or self.default_entity_type or \
+                                                            type(self).__name__
 
         self._id = 'no_id'
         self._name = name
@@ -55,6 +58,7 @@ class Entity():
 
     def __setitem__(self, key, value):
         # TO DO: component initializing if managers is added
+        # TO DO: check if component already have entity (already exist)
         self._components[key] = value
 
     def __getattr__(self, key):
@@ -65,6 +69,7 @@ class Entity():
 
     def __setattr__(self, key, value):
         # TO DO: component initializing if managers is added
+        # TO DO: check if component already have entity (already exist)
         if key in super().__getattribute__('__slots__'):
             super().__setattr__(key, value)
         else:
@@ -74,9 +79,10 @@ class Entity():
     def create(self, entity_manager, component_manager):
         self._entity_manager = entity_manager
         self._component_manager = component_manager
-
+        #TO DO: raise error if entity already exist (initialized)
         # TO DO: add entity and components into managers
 
     def destroy(self):
         # TO DO: destroy entity and all components
+        # TO DO: raise error if entity is not initialized
         pass

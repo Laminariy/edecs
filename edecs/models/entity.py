@@ -31,7 +31,6 @@ class Entity():
     def initialized(self):
         return self._entity_manager and self._component_manager
 
-    # TO DO: look __new__ function in tutorial (append __slots__)
 
     def __init__(self, name, entity_type=None):
         self._type = entity_type or self.default_entity_type or \
@@ -79,7 +78,7 @@ class Entity():
     def create(self, entity_manager, component_manager):
         self._entity_manager = entity_manager
         self._component_manager = component_manager
-        #TO DO: raise error if entity already exist (initialized)
+        # TO DO: raise error if entity already exist (initialized)
         # TO DO: add entity and components into managers
 
     def destroy(self):

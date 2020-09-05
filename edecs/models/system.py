@@ -1,6 +1,7 @@
 class System():
 
-    __slots__ = ['_type']
+    __slots__ = ['_type', '_entity_manager', '_component_manager',
+                 '_system_manager', '_event_manager']
 
     default_system_type = None
 
@@ -13,7 +14,7 @@ class System():
         self._event_manager = None
 
 
-    def send_event(self, event_type):
+    def send(self, event_type):
         pass
 
     def subscribe(self, fn, event_type):
@@ -28,6 +29,8 @@ class System():
         self._component_manager = component_manager
         self._system_manager = system_manager
         self._event_manager = event_manager
+
+        # TO DO: add system into system manager
 
         init()
 

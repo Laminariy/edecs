@@ -1,3 +1,6 @@
+import json
+
+
 class Component():
     '''Base component class'''
 
@@ -19,7 +22,6 @@ class Component():
     def initialized(self):
         return self._entity
 
-    # TO DO: look __new__ function in tutorial (append __slots__)
 
     def __init__(self, component_type=None, **properties):
         self._type = component_type or self.default_component_type or \
@@ -28,10 +30,11 @@ class Component():
 
         if self.defaults == {}:
             for key, value in properties.items():
-                setattr(self, key, value)
-        else:
-            for key, value in self.defaults.items():
-                setattr(self, key, properties.pop(key, value))
+                #setattr(self, key, value)
+                self.defaults[key] = value
+
+        for key, value in self.defaults.items():
+            setattr(self, key, properties.pop(key, value))
 
     def __repr__(self):
         # <Component:type; Enity:entity>
@@ -39,13 +42,20 @@ class Component():
                                             self._entity if self._entity is None
                                                         else self._entity.type)
 
-    '''def __str__(self):
+    def __str__(self):
         # JSON
-        pass'''
+        keys = self.defaults.keys()
+        data = {}
+
+        for key in keys:
+            data[key] = getattr(self, key)
+
+        json_string = json.dumps(data, indent=4)
+        return json_string
 
 
     def create(self, entity):
-        if self.initialized then:
+        if self.initialized:
             # TO DO: raise error (component already exist(have entity))
             pass
 

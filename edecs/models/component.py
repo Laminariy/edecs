@@ -15,6 +15,10 @@ class Component():
         return self._type
 
     @property
+    def id(self):
+        return self._id
+
+    @property
     def entity(self):
         return self._entity
 
@@ -26,6 +30,7 @@ class Component():
     def __init__(self, component_type=None, **properties):
         self._type = component_type or self.default_component_type or \
                                                             type(self).__name__
+        self._id = 'no_id'
         self._entity = None
 
         if self.defaults == {}:

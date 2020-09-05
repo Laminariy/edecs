@@ -1,4 +1,5 @@
 class EntityManager():
+    '''Entity manager'''
 
     @property
     def entities(self):

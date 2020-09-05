@@ -1,9 +1,16 @@
 class System():
+    '''Base system class'''
 
     __slots__ = ['_type', '_entity_manager', '_component_manager',
                  '_system_manager', '_event_manager']
 
     default_system_type = None
+
+
+    @property
+    def type(self):
+        return self._type
+
 
     def __init__(self, system_type=None):
         self._type = system_type or default_system_type or type(self).__name__

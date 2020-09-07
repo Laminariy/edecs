@@ -21,7 +21,6 @@ class EntityManager():
             # TO DO: Raise error (entity already exist)
 
         entity._id = self._entity_count
-        entity._entity_manager = self
         self._entity_count+=1
 
         self._entities.append(entity)

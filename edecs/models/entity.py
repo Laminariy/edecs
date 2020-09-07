@@ -97,7 +97,7 @@ class Entity():
         self._component_manager = component_manager
 
         self._entity_manager.create_entity(self)
-        for component in self._components:
+        for key, component in self._components.items():
             self._component_manager.create_component(component)
 
     def destroy(self):
@@ -105,7 +105,7 @@ class Entity():
             pass
             # TO DO: Raise error (entity not created)
 
-        for component in self._components:
+        for key, component in self._components.items():
             self._component_manager.destroy_component(component)
         self._entity_manager.destroy_entity(self)
 

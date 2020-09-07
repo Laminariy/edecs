@@ -59,6 +59,7 @@ class Entity():
     def __setitem__(self, key, value):
         if value.initialized:
             # TO DO: Raise error (component already have entity)
+            pass
 
         self._components[key] = value
         value.create(self)

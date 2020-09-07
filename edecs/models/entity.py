@@ -79,6 +79,7 @@ class Entity():
         else:
             if value.initialized:
                 # TO DO: Raise error (component already have entity)
+                pass
 
             self._components[key] = value
             value.create(self)

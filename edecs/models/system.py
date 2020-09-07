@@ -31,6 +31,13 @@ class System():
         self._subscribed_functions = []
 
 
+    def create_entity(self, entity):
+        if not self.initialized:
+            pass
+            # TO DO: Raise error (system isn't initialized)
+
+        entity.create(self._entity_manager, self._component_manager)
+
     def send(self, event_type, data):
         if not self.initialized:
             pass

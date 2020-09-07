@@ -50,15 +50,20 @@ class Entity():
         ent = "<Entity:{}; {}:{}>".format(self._type, self._name, self._id)
         components = self._components
         # TO DO: return repr of component
+        # repr(component)
         return "{}\n{}".format(ent, components)
 
     def __getitem__(self, key):
         return self._components[key]
 
     def __setitem__(self, key, value):
-        # TO DO: component initializing if managers is added
-        # TO DO: check if component already have entity (already exist)
+        if value._entity is not None:
+            # TO DO: Raise error (component already have entity)
+
         self._components[key] = value
+
+        if self.initialized:
+            self._component_manager.create(value)
 
     def __getattr__(self, key):
         if key in super().__getattribute__('__slots__'):
@@ -67,21 +72,38 @@ class Entity():
             return self._components[key]
 
     def __setattr__(self, key, value):
-        # TO DO: component initializing if managers is added
-        # TO DO: check if component already have entity (already exist)
         if key in super().__getattribute__('__slots__'):
             super().__setattr__(key, value)
         else:
+            if value._entity is not None:
+                # TO DO: Raise error (component already have entity)
+
             self._components[key] = value
+
+            if self.initialized:
+                self._component_manager.create(value)
 
 
     def create(self, entity_manager, component_manager):
+        if self.initialized:
+            pass
+            # TO DO: Raise error (entity already created)
+
         self._entity_manager = entity_manager
         self._component_manager = component_manager
-        # TO DO: raise error if entity already exist (initialized)
-        # TO DO: add entity and components into managers
+
+        self._entity_manager.create_entity(self)
+        for component in self._components:
+            self._component_manager.create_component(component)
 
     def destroy(self):
-        # TO DO: destroy entity and all components
-        # TO DO: raise error if entity is not initialized
-        pass
+        if not self.initialized:
+            pass
+            # TO DO: Raise error (entity not created)
+
+        for component in self._components:
+            self._component_manager.destroy_component(component)
+        self._entity_manager.destroy_entity(self)
+
+        self._entity_manager = None
+        self._component_manager = None

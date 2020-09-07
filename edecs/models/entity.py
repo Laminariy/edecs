@@ -57,10 +57,11 @@ class Entity():
         return self._components[key]
 
     def __setitem__(self, key, value):
-        if value._entity is not None:
+        if value.initialized:
             # TO DO: Raise error (component already have entity)
 
         self._components[key] = value
+        value.create(self)
 
         if self.initialized:
             self._component_manager.create(value)
@@ -75,10 +76,11 @@ class Entity():
         if key in super().__getattribute__('__slots__'):
             super().__setattr__(key, value)
         else:
-            if value._entity is not None:
+            if value.initialized:
                 # TO DO: Raise error (component already have entity)
 
             self._components[key] = value
+            value.create(self)
 
             if self.initialized:
                 self._component_manager.create(value)

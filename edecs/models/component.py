@@ -64,7 +64,7 @@ class Component():
             # TO DO: raise error (component already exist(have entity))
             pass
 
-        setattr(entity, self._type, self)
+        self._entity = entity
 
     def destroy(self):
         if not self.initialized:

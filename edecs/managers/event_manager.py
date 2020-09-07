@@ -9,6 +9,10 @@ class EventManager():
     def events(self):
         return self._events
 
+    @property
+    def empty(self):
+        return self._events == []
+
 
     def __init__(self):
         self._subscribers = {}
@@ -41,7 +45,7 @@ class EventManager():
     def update_events(self):
         if self._events != []:
             event = self._events.pop(0)
-            subscribers = self._subscribers.get(event_type)
+            subscribers = self._subscribers.get(event.type)
             if subscribers is not None:
                 for subscriber in subscribers:
                     subscriber(event)

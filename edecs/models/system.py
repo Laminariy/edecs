@@ -21,7 +21,7 @@ class System():
 
 
     def __init__(self, system_type=None):
-        self._type = system_type or default_system_type or type(self).__name__
+        self._type = system_type or self.default_system_type or type(self).__name__
 
         self._entity_manager = None
         self._component_manager = None
@@ -38,7 +38,7 @@ class System():
 
         entity.create(self._entity_manager, self._component_manager)
 
-    def send(self, event_type, data):
+    def send(self, event_type, data=None):
         if not self.initialized:
             pass
             # TO DO: Raise error (system isn't initialized)
@@ -76,10 +76,10 @@ class System():
 
         self._system_manager.create_system(self)
 
-        init()
+        self.init()
 
     def destroy(self):
-        final()
+        self.final()
 
         if not self.initialized:
             pass

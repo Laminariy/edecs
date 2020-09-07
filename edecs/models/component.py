@@ -67,6 +67,11 @@ class Component():
         setattr(entity, self._type, self)
 
     def destroy(self):
-        # TO DO: destroy component
-        # TO DO: raise error if component is not exist (no entity)
-        pass
+        if not self.initialized:
+            # TO DO: raise error (component have not entity)
+            pass
+
+        entity = self._entity
+        self._entity = None
+        if entity.initialized:
+            entity._component_manager.destroy_component(self)

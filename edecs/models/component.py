@@ -1,5 +1,5 @@
 import json
-
+from .exceptions import (ComponentHasNoEntity, ComponentAlreadyHaveEntity)
 
 class Component():
     '''Base component class'''
@@ -61,15 +61,13 @@ class Component():
 
     def create(self, entity):
         if self.initialized:
-            # TO DO: raise error (component already exist(have entity))
-            pass
+            raise ComponentAlreadyHaveEntity(self)
 
         self._entity = entity
 
     def destroy(self):
         if not self.initialized:
-            # TO DO: raise error (component have not entity)
-            pass
+            raise ComponentHasNoEntity(self)
 
         entity = self._entity
         self._entity = None

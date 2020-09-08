@@ -1,3 +1,6 @@
+from ..models import (ComponentHasNoEntity, ComponentAlreadyHaveEntity)
+
+
 class ComponentManager():
     '''Component manager'''
 
@@ -7,7 +10,7 @@ class ComponentManager():
 
     @property
     def component_types(self):
-        return self.component_types
+        return self._component_types
 
 
     def __init__(self):
@@ -17,8 +20,7 @@ class ComponentManager():
 
     def create_component(self, component):
         if component in self._components:
-            pass
-            # TO DO: Raise error (component already exist)
+            raise ComponentAlreadyHaveEntity(component)
 
         component._id = self._component_count
         self._component_count+=1
@@ -31,8 +33,7 @@ class ComponentManager():
 
     def destroy_component(self, component):
         if component not in self._components:
-            pass
-            # TO DO: Raise error (component already deleted)
+            raise ComponentHasNoEntity(component)
 
         self._components[component.id] = None
 

@@ -1,3 +1,6 @@
+from ..models import (FunctionNotSubscribed, FunctionAlreadySubscribed)
+
+
 class EventManager():
     '''Event manager'''
 
@@ -23,16 +26,14 @@ class EventManager():
             self._subscribers[event_type] = []
 
         if fn in self._subscribers[event_type]:
-            pass
-            # TO DO: Raise error (function already subscribed)
+            raise FunctionAlreadySubscribed(fn, event_type)
 
         self._subscribers[event_type].append(fn)
 
     def unsubscribe(self, fn, event_type):
         if self._subscribers.get(event_type) is None or \
                                         fn not in self._subscribers[event_type]:
-            pass
-            # TO DO: Raise error (function doesn't subscribed)
+            raise FunctionNotSubscribed(fn, event_type)
 
         self._subscribers[event_type].remove(fn)
 

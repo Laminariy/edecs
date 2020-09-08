@@ -1,3 +1,6 @@
+from ..models import (EntityNotCreated, EntityAlreadyExists)
+
+
 class EntityManager():
     '''Entity manager'''
 
@@ -17,8 +20,7 @@ class EntityManager():
 
     def create_entity(self, entity):
         if entity in self._entities:
-            pass
-            # TO DO: Raise error (entity already exist)
+            raise EntityAlreadyExists(entity)
 
         entity._id = self._entity_count
         self._entity_count+=1
@@ -31,8 +33,7 @@ class EntityManager():
 
     def destroy_entity(self, entity):
         if entity not in self._entities:
-            pass
-            # TO DO: Raise error (entity already deleted)
+            raise EntityNotCreated(entity)
 
         self._entities[entity.id] = None
 

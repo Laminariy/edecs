@@ -1,4 +1,5 @@
 from .event import Event
+from .exceptions import (SystemNotCreated, SystemAlreadyExists)
 
 
 class System():
@@ -33,15 +34,13 @@ class System():
 
     def create_entity(self, entity):
         if not self.initialized:
-            pass
-            # TO DO: Raise error (system isn't initialized)
+            raise SystemNotCreated(self)
 
         entity.create(self._entity_manager, self._component_manager)
 
     def send(self, event_type, data=None):
         if not self.initialized:
-            pass
-            # TO DO: Raise error (system isn't initialized)
+            raise SystemNotCreated(self)
 
         event = Event(event_type, data)
         self._event_manager.add_event(event)
@@ -49,16 +48,14 @@ class System():
     def subscribe(self, fn, event_type):
         # TO DO: decorator
         if not self.initialized:
-            pass
-            # TO DO: Raise error (system isn't initialized)
+            raise SystemNotCreated(self)
 
         self._subscribed_functions.append((fn, event_type))
         self._event_manager.subscribe(fn, event_type)
 
     def unsubscribe(self, fn, event_type):
         if not self.initialized:
-            pass
-            # TO DO: Raise error (system isn't initialized)
+            raise SystemNotCreated(self)
 
         self._subscribed_functions.remove((fn, event_type))
         self._event_manager.unsubscribe(fn, event_type)
@@ -66,8 +63,7 @@ class System():
     def create(self, entity_manager, component_manager,
                                                 system_manager, event_manager):
         if self.initialized:
-            pass
-            # TO DO: Raise error (system already created)
+            raise SystemAlreadyExists(self)
 
         self._entity_manager = entity_manager
         self._component_manager = component_manager
@@ -82,8 +78,7 @@ class System():
         self.final()
 
         if not self.initialized:
-            pass
-            # TO DO: Raise error (system isn't initialized)
+            raise SystemNotCreated(self)
 
         for subscriber in self._subscribed_functions:
             self._event_manager.unsubscribe(subscriber[0], subscriber[1])

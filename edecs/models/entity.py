@@ -1,4 +1,6 @@
 from copy import deepcopy
+from .exceptions import (EntityNotCreated, EntityAlreadyExists,
+                         ComponentAlreadyHaveEntity)
 
 
 class Entity():
@@ -40,6 +42,9 @@ class Entity():
         self._name = name
         self._components = deepcopy(self.default_components)
 
+        for component in self._components.values():
+            component.create(self)
+
         self._entity_manager = None
         self._component_manager = None
 
@@ -58,8 +63,7 @@ class Entity():
 
     def __setitem__(self, key, value):
         if value.initialized:
-            # TO DO: Raise error (component already have entity)
-            pass
+            raise ComponentAlreadyHaveEntity(value)
 
         self._components[key] = value
         value.create(self)
@@ -78,8 +82,7 @@ class Entity():
             super().__setattr__(key, value)
         else:
             if value.initialized:
-                # TO DO: Raise error (component already have entity)
-                pass
+                raise ComponentAlreadyHaveEntity(value)
 
             self._components[key] = value
             value.create(self)
@@ -90,22 +93,20 @@ class Entity():
 
     def create(self, entity_manager, component_manager):
         if self.initialized:
-            pass
-            # TO DO: Raise error (entity already created)
+            raise EntityAlreadyExists(self)
 
         self._entity_manager = entity_manager
         self._component_manager = component_manager
 
         self._entity_manager.create_entity(self)
-        for key, component in self._components.items():
+        for component in self._components.values():
             self._component_manager.create_component(component)
 
     def destroy(self):
         if not self.initialized:
-            pass
-            # TO DO: Raise error (entity not created)
+            raise EntityNotCreated(self)
 
-        for key, component in self._components.items():
+        for component in self._components.values():
             self._component_manager.destroy_component(component)
         self._entity_manager.destroy_entity(self)
 

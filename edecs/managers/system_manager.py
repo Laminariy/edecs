@@ -1,3 +1,6 @@
+from ..models import (SystemNotCreated, SystemAlreadyExists)
+
+
 class SystemManager():
     '''System manager'''
 
@@ -11,14 +14,12 @@ class SystemManager():
 
     def create_system(self, system):
         if system.type in self._system_types.keys():
-            pass
-            # TO DO: Raise error (system already exist)
+            raise SystemAlreadyExists(system)
 
         self._system_types[system.type] = system
 
     def destroy_system(self, system):
         if system.type not in self._system_types.keys():
-            pass
-            # TO DO: Raise error (system already destroyed (doesn't exist))
+            raise SystemNotCreated(system)
 
         del self._system_types[system.type]

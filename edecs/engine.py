@@ -1,4 +1,5 @@
-from .managers import EntityManager, ComponentManager, SystemManager, EventManager
+from .managers import (EntityManager, ComponentManager,
+                       SystemManager, EventManager)
 
 class Engine():
 

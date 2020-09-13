@@ -1,4 +1,5 @@
-from ..models import (ComponentHasNoEntity, ComponentAlreadyHaveEntity)
+from ..models import (ComponentHasNoEntity, ComponentAlreadyHaveEntity,
+                      EntityAlredyHaveComponent)
 
 
 class ComponentManager():
@@ -29,7 +30,12 @@ class ComponentManager():
 
         if self._component_types.get(component.type) is None:
             self._component_types[component.type] = {}
-        self._component_types[component.type][component.id] = component
+
+        if self._component_types[component.type].get(component.entity.id) \
+                                                                    is not None:
+            EntityAlredyHaveComponent(component.entity, component)
+
+        self._component_types[component.type][component.entity.id] = component
 
     def destroy_component(self, component):
         if component not in self._components:

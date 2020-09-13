@@ -14,6 +14,16 @@ class EntityNotCreated(Exception):
     def __str__(self):
         return "Entity {} not created".format(self.entity)
 
+class EntityAlredyHaveComponent(Exception):
+
+    def __init__(self, entity, component):
+        self.entity = entity
+        self.component = component
+
+    def __str__(self):
+        return "Entity {} already has a component {}".format(self.entity,
+                                                             self.component)
+
 class ComponentAlreadyHaveEntity(Exception):
 
     def __init__(self, component):

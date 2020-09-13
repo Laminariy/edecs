@@ -11,6 +11,7 @@ from .managers import SystemManager
 from .engine import Engine
 
 from .models import (EntityNotCreated, EntityAlreadyExists,
+                     EntityAlredyHaveComponent,
                      ComponentHasNoEntity, ComponentAlreadyHaveEntity,
                      SystemNotCreated, SystemAlreadyExists,
                      FunctionNotSubscribed, FunctionAlreadySubscribed)

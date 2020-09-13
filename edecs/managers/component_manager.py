@@ -21,6 +21,7 @@ class ComponentManager():
 
     def create_component(self, component):
         if component in self._components:
+            # TO DO: fix this error
             raise ComponentAlreadyHaveEntity(component)
 
         component._id = self._component_count
@@ -43,6 +44,6 @@ class ComponentManager():
 
         self._components[component.id] = None
 
-        del self._component_types[component.type][component.id]
+        del self._component_types[component.type][component.entity.id]
         if self._component_types[component.type] == {}:
             del self._component_types[component.type]

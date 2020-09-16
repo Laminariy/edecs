@@ -19,6 +19,22 @@ class System():
     def initialized(self):
         return self._entity_manager and self._component_manager and \
                self._system_manager and self._event_manager
+               
+    @property
+    def entity_manager(self):
+        return self._entity_manager
+        
+    @property
+    def component_manager(self):
+        return self._component_manager
+        
+    @property
+    def system_manager(self):
+        return self._system_manager
+        
+    @property
+    def event_manager(self):
+        return self._event_manager
 
 
     def __init__(self, system_type=None):

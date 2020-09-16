@@ -47,3 +47,5 @@ class ComponentManager():
         del self._component_types[component.type][component.entity.id]
         if self._component_types[component.type] == {}:
             del self._component_types[component.type]
+            
+        component._entity = None

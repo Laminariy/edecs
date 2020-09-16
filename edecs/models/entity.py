@@ -65,11 +65,19 @@ class Entity():
         if value.initialized:
             raise ComponentAlreadyHaveEntity(value)
 
+        old_component = self._components.pop(key, None)
+        if old_component is not None:
+            old_component.destroy()
+
         self._components[key] = value
         value.create(self)
 
         if self.initialized:
-            self._component_manager.create(value)
+            self._component_manager.create_component(value)
+            
+    def __delitem__(self, key):
+        component = self._components.pop(key)
+        component.destroy()
 
     def __getattr__(self, key):
         if key in super().__getattribute__('__slots__'):
@@ -84,11 +92,19 @@ class Entity():
             if value.initialized:
                 raise ComponentAlreadyHaveEntity(value)
 
+            old_component = self._components.pop(key, None)
+            if old_component is not None:
+                old_component.destroy()
+
             self._components[key] = value
             value.create(self)
 
             if self.initialized:
-                self._component_manager.create(value)
+                self._component_manager.create_component(value)
+                
+    def __delattr__(self, key):
+        component = self._components.pop(key)
+        component.destroy()
 
 
     def create(self, entity_manager, component_manager):

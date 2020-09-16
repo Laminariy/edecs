@@ -70,6 +70,7 @@ class Component():
             raise ComponentHasNoEntity(self)
 
         entity = self._entity
-        self._entity = None
         if entity.initialized:
             entity._component_manager.destroy_component(self)
+        else:
+            self._entity = None

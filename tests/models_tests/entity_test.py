@@ -1,19 +1,23 @@
 import sys
 sys.path.append('../..')
 import doctest
-from edecs import Entity
+from edecs import (Entity, Component)
 
 def test():
     '''
         >>> player = Entity("player")
-        >>> player.health = 10
+        >>> health = Component("HealthComponent", max_hp=10, hp=10)
+        >>> player.health = health
         >>> print(player['health'])
-        10
+        {
+            "max_hp": 10,
+            "hp": 10
+        }
         >>> player
         <Entity:Entity; player:no_id>
         >>> print(player)
         <Entity:Entity; player:no_id>
-        {'health': 10}
+        {'health': <Component:HealthComponent; Entity:Entity>}
         >>> print(player.id)
         no_id
         >>> print(player.type)
@@ -21,23 +25,20 @@ def test():
         >>> player._id = 5
         >>> print(player.id)
         5
-        >>> player['health'] = 7
-        >>> print(player['health'])
+        >>> player['health'].hp = 7
+        >>> print(player['health'].hp)
         7
 
         >>> class Skeleton(Entity):
         ...     default_entity_type = "Skeleton-Archer"
-        ...     default_components = {'health': 10}
+        ...     default_components = {'health': Component("HealthComponent", max_hp=10, hp=10)}
         ...
 
         >>> skeleton = Skeleton("skeleton-001")
         >>> print(skeleton)
         <Entity:Skeleton-Archer; skeleton-001:no_id>
-        {'health': 10}
-        >>> print(skeleton.health)
-        10
-        >>> skeleton.a = 10
-        >>> print(skeleton.a)
+        {'health': <Component:HealthComponent; Entity:Skeleton-Archer>}
+        >>> print(skeleton.health.hp)
         10
     '''
 

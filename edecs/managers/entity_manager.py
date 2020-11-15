@@ -40,3 +40,6 @@ class EntityManager():
         del self._entity_types[entity.type][entity.id]
         if self._entity_types[entity.type] == {}:
             del self._entity_types[entity.type]
+
+    def entity_exists(self, entity_id):
+        return entity_id < len(self.entities) and self.entities[entity_id] is not None

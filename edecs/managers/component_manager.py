@@ -47,5 +47,13 @@ class ComponentManager():
         del self._component_types[component.type][component.entity.id]
         if self._component_types[component.type] == {}:
             del self._component_types[component.type]
-            
+
         component._entity = None
+
+    def component_exists(self, component_type, entity_id):
+        component_types = self.component_types.get(component_type)
+        if component_types is None:
+            return False
+        else:
+            component = component_types.get(entity_id)
+            return component is not None

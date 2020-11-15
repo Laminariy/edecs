@@ -1,3 +1,4 @@
+from .models import Event
 from .managers import (EntityManager, ComponentManager,
                        SystemManager, EventManager)
 
@@ -28,3 +29,21 @@ class Engine():
     def create_system(self, system):
         system.create(self._entity_manager, self._component_manager,
                       self._system_manager, self._event_manager)
+
+    def generate_input(self, event_type='InputEvent', data=None):
+        event = Event(event_type, data)
+
+        self._event_manager.add_event(event)
+
+    def send_input(self, event):
+        self._event_manager.add_event(event)
+
+    def get_output(self):
+        events = self._event_manager.events
+        output = []
+
+        for event in events:
+            if event.type == 'OutputEvent':
+                output.append(event)
+
+        return output

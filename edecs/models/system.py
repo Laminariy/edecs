@@ -19,19 +19,19 @@ class System():
     def initialized(self):
         return self._entity_manager and self._component_manager and \
                self._system_manager and self._event_manager
-               
+
     @property
     def entity_manager(self):
         return self._entity_manager
-        
+
     @property
     def component_manager(self):
         return self._component_manager
-        
+
     @property
     def system_manager(self):
         return self._system_manager
-        
+
     @property
     def event_manager(self):
         return self._event_manager
@@ -54,11 +54,17 @@ class System():
 
         entity.create(self._entity_manager, self._component_manager)
 
-    def send(self, event_type, data=None):
+    def generate_event(self, event_type, data=None):
         if not self.initialized:
             raise SystemNotCreated(self)
 
         event = Event(event_type, data)
+        self._event_manager.add_event(event)
+
+    def send_event(self, event):
+        if not self.initialized:
+            raise SystemNotCreated(self)
+    
         self._event_manager.add_event(event)
 
     def subscribe(self, fn, event_type):

@@ -84,7 +84,7 @@ from attack_component import AttackComponent
 class Skeleton(Entity):
     # стандартные компоненты сущности:
     default_components = {
-        'health': HealthComponent(max_hp=5, hp=5)
+        'health': HealthComponent(max_hp=5, hp=5),
         'attack': AttackComponent()
     }
 ```
@@ -100,7 +100,7 @@ from attack_component import AttackComponent
 
 class Hero(Entity):
     default_components = {
-        'health': HealthComponent(max_hp=20, hp=20)
+        'health': HealthComponent(max_hp=20, hp=20),
         'attack': AttackComponent(damage=3, crit_damage=5, crit_chance=0.45)
     }
 ```

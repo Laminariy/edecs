@@ -24,7 +24,7 @@ class Component():
 
     @property
     def initialized(self):
-        return self._entity
+        return self._entity is not None
 
 
     def __init__(self, component_type=None, **properties):

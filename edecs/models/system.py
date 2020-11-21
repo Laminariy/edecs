@@ -64,8 +64,21 @@ class System():
     def send_event(self, event):
         if not self.initialized:
             raise SystemNotCreated(self)
-    
+
         self._event_manager.add_event(event)
+
+    def generate_engine_event(self, event_type, data=None):
+        if not self.initialized:
+            raise SystemNotCreated(self)
+
+        event = Event(event_type, data)
+        self._event_manager.add_engine_event(event)
+
+    def send_engine_event(self, event):
+        if not self.initialized:
+            raise SystemNotCreated(self)
+
+        self._event_manager.add_engine_event(event)
 
     def subscribe(self, fn, event_type):
         # TO DO: decorator
@@ -113,6 +126,9 @@ class System():
 
 
     def init(self):
+        pass
+
+    def update(self, dt):
         pass
 
     def final(self):

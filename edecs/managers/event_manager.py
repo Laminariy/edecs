@@ -13,6 +13,10 @@ class EventManager():
         return self._events
 
     @property
+    def engine_events(self):
+        return self._engine_events
+
+    @property
     def empty(self):
         return self._events == []
 
@@ -20,6 +24,7 @@ class EventManager():
     def __init__(self):
         self._subscribers = {}
         self._events = []
+        self._engine_events = []
 
     def subscribe(self, fn, event_type):
         if self._subscribers.get(event_type) is None:
@@ -42,6 +47,9 @@ class EventManager():
 
     def add_event(self, event):
         self._events.append(event)
+
+    def add_engine_event(self, event):
+        self._engine_events.append(event)
 
     def update_events(self):
         if self._events != []:

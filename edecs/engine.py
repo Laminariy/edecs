@@ -1,3 +1,4 @@
+from time import time
 from .models import Event
 from .managers import (EntityManager, ComponentManager,
                        SystemManager, EventManager)
@@ -26,6 +27,8 @@ class Engine():
         self._system_manager = SystemManager()
         self._event_manager = EventManager()
 
+        self.last_update = time()
+
     def create_system(self, system):
         system.create(self._entity_manager, self._component_manager,
                       self._system_manager, self._event_manager)
@@ -39,11 +42,15 @@ class Engine():
         self._event_manager.add_event(event)
 
     def get_output(self):
-        events = self._event_manager.events
-        output = []
+        return self._event_manager.engine_events
 
-        for event in events:
-            if event.type == 'OutputEvent':
-                output.append(event)
+    def update(self):
+        systems = self.system_manager.system_types
 
-        return output
+        for system in systems.values():
+            system.update(time()-last_update)
+
+        last_update = time()
+
+        while not self.event_manager.empty:
+            self.event_manager.update_events()

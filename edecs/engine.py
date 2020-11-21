@@ -51,9 +51,9 @@ class Engine():
         systems = self.system_manager.system_types
 
         for system in systems.values():
-            system.update(time()-last_update)
+            system.update(time()-self.last_update)
 
-        last_update = time()
+        self.last_update = time()
 
         while not self.event_manager.empty:
             self.event_manager.update_events()

@@ -33,6 +33,9 @@ class Engine():
         system.create(self._entity_manager, self._component_manager,
                       self._system_manager, self._event_manager)
 
+    def destroy_system(self, system):
+        system.destroy()
+
     def generate_input(self, event_type='InputEvent', data=None):
         event = Event(event_type, data)
 

@@ -149,13 +149,13 @@ class CombatSystem(System):
             health_components[target_id].hp -= damage
             
             # отправляем событие, что один персонаж атаковал другого
-            self.send_event('AttackEvent', {'attacker_id':id, 'target_id':target_id, 'damage':damage})
+            self.generate_event('AttackEvent', {'attacker_id':id, 'target_id':target_id, 'damage':damage})
             
             # если цель умерла после атаки
             if health_components[target_id].hp <= 0:
                 # отправляем событие о смерти персонажа
                 name = self.entity_manager.entities[target_id]
-                self.send_event('DeathEvent', {'name':name})
+                self.generate_event('DeathEvent', {'name':name})
                 
                 # убираем цель атакующему
                 atk.target = -1

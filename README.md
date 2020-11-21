@@ -23,6 +23,8 @@ pip install edecs
 
 ## [Документация](https://github.com/Laminariy/edecs/blob/master/docs.md)
 
+## [Примеры кода](https://github.com/Laminariy/edecs-examples)
+
 ## Краткий гайд
 
 ### Компонент (Component)
@@ -125,46 +127,57 @@ class CombatSystem(System):
         # создаем объекты сущностей
         hero = Hero('Brave Knight')
         skeleton = Skeleton('Archer Skeleton')
-        
+
         # добавляем их в "мир"
         self.create_entity(hero)
         self.create_entity(skeleton)
-        
+
         # "натравливаем" друг на друга - добавляем айди в компонент атаки
         hero.attack.target = skeleton.id
         skeleton.attack.target = hero.id
-        
+
+        # подписываем функцию на событие смерти
+        self.subscribe(self.on_death, 'DeathEvent')
+
+    # событие о смерти персонажа
+    def on_death(self, event):
+        id = event.id
+
+        # удаляем мертвую сущность
+        death_entity = self.entity_manager.entities[id]
+        self.destroy_entity(death_entity)
+
     # update() вызывается каждый проход игрового цикла
     def update(self, dt):
         # находим все компоненты атаки и здоровья
         attack_components = self.component_manager.component_types['AttackComponent']
         health_components = self.component_manager.component_types['HealthComponent']
-        
+
         # пробегаем все компоненты атаки
-        for id, atk in enumerate(attack_components):
+        for id, atk in attack_components.items():
             target_id = atk.target
-            
-            if target_id == -1: break # если существо никого не атакует - ничего не делаем, выходим из цикла
-            
+
+            if target_id == -1:
+                break # если существо никого не атакует - ничего не делаем, выходим из цикла
+
             # рассчитываем урон и вычитаем здоровье
             damage = atk.get_damage()
             health_components[target_id].hp -= damage
-            
+
             # отправляем событие, что один персонаж атаковал другого
             self.generate_event('AttackEvent', {'attacker_id':id, 'target_id':target_id, 'damage':damage})
-            
+
             # если цель умерла после атаки
             if health_components[target_id].hp <= 0:
                 # отправляем событие о смерти персонажа
-                name = self.entity_manager.entities[target_id]
-                self.generate_event('DeathEvent', {'name':name})
-                
+                name = self.entity_manager.entities[target_id].name
+                self.generate_event('DeathEvent', {'id':target_id,'name':name})
+
                 # убираем цель атакующему
                 atk.target = -1
-                
-                # удаляем мертвую сущность
-                death_entity = self.entity_manager.entities[target_id]
-                self.destroy_entity(death_entity)
+
+                # так как умершее существо еще не удалено системой, уберем и у него цель тоже
+                attack_components[target_id].target = -1
 ```
 
 Боевая система. Каждый проход игрового цикла находит всех атакующих (по компонентам атаки), рассчитывает урон и применяет его к цели атакующего.
@@ -182,19 +195,20 @@ class LogSystem(System):
             attacker_id = event.attacker_id
             target_id = event.target_id
             damage = event.damage
-            attacker_name = self.entity_manager.entities[attacker_id]
-            target_name = self.entity_manager.entities[target_id]
-            
+
+            attacker_name = self.entity_manager.entities[attacker_id].name
+            target_name = self.entity_manager.entities[target_id].name
+
             print("%s наносит %s урона персонажу %s!" % (attacker_name, damage, target_name))
-            
+
         # если кто-то умер
         elif event.type == 'DeathEvent':
             print("Персонаж %s умер!" % event.name)
-            
+
     # здесь в init() мы подписываем функцию log() на события
     def init(self):
-        self.subscribe(log, 'AttackEvent')
-        self.subscribe(log, 'DeathEvent')
+        self.subscribe(self.log, 'AttackEvent')
+        self.subscribe(self.log, 'DeathEvent')
 ```
 Система логирования, которая будет выводить в консоль события.
 
@@ -217,7 +231,7 @@ def main():
         engine.update()
     
 if __name__ == '__main__':
-    main():
+    main()
 ```
 
 Движок является управляющим объектом всего edecs. Через него можно влиять на внутренние данные и системы, отправлять или получать события.

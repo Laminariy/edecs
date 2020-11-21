@@ -54,6 +54,12 @@ class System():
 
         entity.create(self._entity_manager, self._component_manager)
 
+    def destroy_entity(self, entity):
+        if not self.initialized:
+            raise SystemNotCreated(self)
+
+        entity.destroy()
+
     def generate_event(self, event_type, data=None):
         if not self.initialized:
             raise SystemNotCreated(self)

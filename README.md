@@ -21,6 +21,8 @@ pip install edecs
 
 Системы - объекты, реализующие всю игровую логику. Могут генерировать и принимать события.
 
+## [Документация](https://github.com/Laminariy/edecs/blob/master/docs.md)
+
 ## Краткий гайд
 
 ### Компонент (Component)

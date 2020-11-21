@@ -17,8 +17,8 @@ class Event():
         return self._data
 
 
-    def __init__(self, type=None, data=None):
-        self._type = type or self.default_event_type or type(self).__name__
+    def __init__(self, event_type=None, data=None):
+        self._type = event_type or self.default_event_type or type(self).__name__
         self._data = data or self.default_event_data
 
     def __repr__(self):

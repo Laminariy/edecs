@@ -2,7 +2,7 @@ class Event():
     '''Event class'''
 
 
-    __slots__ = ['_type', '_data']
+    __slots__ = ['_sysname', '_type', '_data']
 
     default_event_type = None
     default_event_data = {}

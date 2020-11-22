@@ -36,7 +36,7 @@ class Engine():
     def destroy_system(self, system):
         system.destroy()
 
-    def generate_input(self, event_type='InputEvent', **data):
+    def generate_input(self, event_type='InputEvent', data={}):
         event = Event(sysname='ENGINE', event_type=event_type, data=data)
 
         self._event_manager.add_event(event)

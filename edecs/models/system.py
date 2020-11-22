@@ -60,7 +60,7 @@ class System():
 
         entity.destroy()
 
-    def generate_event(self, event_type, **data):
+    def generate_event(self, event_type, data={}):
         if not self.initialized:
             raise SystemNotCreated(self)
 
@@ -73,7 +73,7 @@ class System():
 
         self._event_manager.add_event(event)
 
-    def generate_engine_event(self, event_type, **data):
+    def generate_engine_event(self, event_type, data={}):
         if not self.initialized:
             raise SystemNotCreated(self)
 

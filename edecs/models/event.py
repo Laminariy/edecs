@@ -17,9 +17,15 @@ class Event():
         return self._data
 
 
-    def __init__(self, event_type=None, data=None):
+    def __init__(self, event_type=None, **data):
         self._type = event_type or self.default_event_type or type(self).__name__
-        self._data = data or self.default_event_data
+
+        if self.default_event_data == {}:
+            for key, value in data.items():
+                self.default_event_data[key] = value
+
+        for key, value in self.default_event_data.items():
+            setattr(self, key, data.pop(key, value))
 
     def __repr__(self):
         # <Event:event_type>

@@ -166,6 +166,10 @@ class AttackEvent(Event):
 
 По умолчанию, если не указывать тип, то будет использоваться имя класса.
 
+### `sysname`
+
+Тип системы, которая сгенерировала событие, обязательный атрибут.
+
 ### `data`
 
 Словарь. Данные, передаваемые вместе с событием.
@@ -174,6 +178,10 @@ class AttackEvent(Event):
 
 ```python
 attack_event = AttackEvent(event_type='AttackEvent', data={'damage':5})
+```
+
+```python
+attack_event = AttackEvent(event_type='AttackEvent', damage=5)
 ```
 
 Либо при объявлении:

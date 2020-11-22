@@ -24,6 +24,7 @@ class Event():
     def __init__(self, sysname, event_type=None, **data):
         self._type = event_type or self.default_event_type or type(self).__name__
         self._sysname = sysname
+        self._data = {}
 
         if self.default_event_data == {}:
             for key, value in data.items():

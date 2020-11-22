@@ -35,7 +35,6 @@ class Component():
 
         if self.defaults == {}:
             for key, value in properties.items():
-                #setattr(self, key, value)
                 self.defaults[key] = value
 
         for key, value in self.defaults.items():

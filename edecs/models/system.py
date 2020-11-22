@@ -64,7 +64,7 @@ class System():
         if not self.initialized:
             raise SystemNotCreated(self)
 
-        event = Event(event_type, data)
+        event = Event(self.type, event_type, data)
         self._event_manager.add_event(event)
 
     def send_event(self, event):
@@ -77,7 +77,7 @@ class System():
         if not self.initialized:
             raise SystemNotCreated(self)
 
-        event = Event(event_type, data)
+        event = Event(self.type, event_type, data)
         self._event_manager.add_engine_event(event)
 
     def send_engine_event(self, event):

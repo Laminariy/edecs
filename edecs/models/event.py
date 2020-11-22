@@ -13,12 +13,17 @@ class Event():
         return self._type
 
     @property
+    def sysname(self): # system name that fire event
+        return self._sysname
+
+    @property
     def data(self):
         return self._data
 
 
-    def __init__(self, event_type=None, **data):
+    def __init__(self, sysname, event_type=None, **data):
         self._type = event_type or self.default_event_type or type(self).__name__
+        self._sysname = sysname
 
         if self.default_event_data == {}:
             for key, value in data.items():

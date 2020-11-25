@@ -4,6 +4,13 @@ from .models import Event
 from .managers import (EntityManager, ComponentManager,
                        SystemManager, EventManager)
 
+try:
+    import uvloop
+except ImportError:
+    pass
+else:
+    uvloop.install()
+
 class Engine():
 
     @property

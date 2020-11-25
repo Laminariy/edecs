@@ -1,5 +1,5 @@
 from time import time
-from asyncio import iscoroutinefunction
+from asyncio import iscoroutinefunction, sleep
 from .event import Event
 from .exceptions import (SystemNotCreated, SystemAlreadyExists)
 
@@ -136,7 +136,7 @@ class System():
         self._system_manager = None
         self._event_manager = None
 
-    async def update_async(self):
+    async def a_update(self):
         last_update = time()
         while self.alive:
             new_update = time()
@@ -144,7 +144,7 @@ class System():
                 await self.update(new_update-last_update)
             else:
                 self.update(new_update-last_update)
-                yield
+                await sleep(0)
 
             last_update = new_update
 

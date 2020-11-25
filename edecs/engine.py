@@ -77,6 +77,6 @@ class Engine():
         self.loop.create_task(self.a_update_events())
 
         for system in systems.values():
-            self.loop.create_task(system.update_async())
+            self.loop.create_task(system.a_update())
 
         self.loop.run_forever()

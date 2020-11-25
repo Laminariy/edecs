@@ -69,6 +69,8 @@ class Engine():
                 else:
                     fn(event)
 
+            await asyncio.sleep(0)
+
 
     def a_run(self):
         systems = self.system_manager.system_types

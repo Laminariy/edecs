@@ -144,9 +144,9 @@ class System():
                 await self.update(new_update-last_update)
             else:
                 self.update(new_update-last_update)
-                await sleep(0)
 
             last_update = new_update
+            await sleep(0)
 
 
     def init(self):

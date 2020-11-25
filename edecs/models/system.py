@@ -1,3 +1,5 @@
+from time import time
+from asyncio import iscoroutinefunction
 from .event import Event
 from .exceptions import (SystemNotCreated, SystemAlreadyExists)
 
@@ -6,7 +8,7 @@ class System():
     '''Base system class'''
 
     __slots__ = ['_type', '_entity_manager', '_component_manager',
-                 '_system_manager', '_event_manager']
+                 '_system_manager', '_event_manager', 'alive']
 
     default_system_type = None
 
@@ -39,6 +41,8 @@ class System():
 
     def __init__(self, system_type=None):
         self._type = system_type or self.default_system_type or type(self).__name__
+
+        self.alive = False
 
         self._entity_manager = None
         self._component_manager = None
@@ -113,9 +117,11 @@ class System():
 
         self._system_manager.create_system(self)
 
+        self.alive = True
         self.init()
 
     def destroy(self):
+        self.alive = False
         self.final()
 
         if not self.initialized:
@@ -129,6 +135,18 @@ class System():
         self._component_manager = None
         self._system_manager = None
         self._event_manager = None
+
+    async def update_async(self):
+        last_update = time()
+        while self.alive:
+            new_update = time()
+            if iscoroutinefunction(self.update):
+                await self.update(new_update-last_update)
+            else:
+                self.update(new_update-last_update)
+                yield
+
+            last_update = new_update
 
 
     def init(self):

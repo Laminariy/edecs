@@ -1,4 +1,5 @@
 from time import time
+import asyncio
 from .models import Event
 from .managers import (EntityManager, ComponentManager,
                        SystemManager, EventManager)
@@ -57,3 +58,25 @@ class Engine():
 
         while not self.event_manager.empty:
             self.event_manager.update_events()
+
+    async def a_update_events(self):
+        ev_manager = self.event_manager
+        loop = self.loop
+        while True:
+            async for fn, event in ev_manager.a_get_events():
+                if asyncio.iscoroutinefunction(fn):
+                    loop.create_task(fn(event))
+                else:
+                    fn(event)
+
+
+    def a_run(self):
+        systems = self.system_manager.system_types
+        self.loop = asyncio.get_event_loop()
+
+        self.loop.create_task(self.a_update_events())
+
+        for system in systems.values():
+            self.loop.create_task(system.update_async())
+
+        self.loop.run_forever()

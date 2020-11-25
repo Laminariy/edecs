@@ -58,3 +58,11 @@ class EventManager():
             if subscribers is not None:
                 for subscriber in subscribers:
                     subscriber(event)
+
+    async def a_get_events(self):
+        if not self.empty:
+            event = self._events.pop(0)
+            subscribers = self._subscribers.get(event.type)
+            if subscribers is not None:
+                for subscriber in subscribers:
+                    yield (subscriber, event)

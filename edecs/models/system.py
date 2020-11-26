@@ -137,23 +137,28 @@ class System():
         self._event_manager = None
 
     async def a_update(self):
-        last_update = time()
-        while self.alive:
-            new_update = time()
+        if getattr(self, 'update', None) is not None:
+            last_update = time()
             if iscoroutinefunction(self.update):
-                await self.update(new_update-last_update)
-            else:
-                self.update(new_update-last_update)
+                while self.alive:
+                    new_update = time()
+                    await self.update(new_update-last_update)
+                    last_update = new_update
+                    await sleep(0)
 
-            last_update = new_update
-            await sleep(0)
+            else:
+                while self.alive:
+                    new_update = time()
+                    self.update(new_update-last_update)
+                    last_update = new_update
+                    await sleep(0)
 
 
     def init(self):
         pass
 
-    def update(self, dt):
-        pass
+    #def update(self, dt):
+        #pass
 
     def final(self):
         pass

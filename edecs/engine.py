@@ -80,13 +80,13 @@ class Engine():
             await asyncio.sleep(0)
 
 
-    def a_run(self):
+    def a_run(self, upd_time=0):
         systems = self.system_manager.system_types
         self.loop = asyncio.get_event_loop()
 
         self.loop.create_task(self.a_update_events())
 
         for system in systems.values():
-            self.loop.create_task(system.a_update())
+            self.loop.create_task(system.a_update(upd_time))
 
         self.loop.run_forever()

@@ -59,7 +59,8 @@ class Engine():
         systems = self.system_manager.system_types
 
         for system in systems.values():
-            system.update(time()-self.last_update)
+            if getattr(system, 'update', None) is not None:
+                system.update(time()-self.last_update)
 
         self.last_update = time()
 

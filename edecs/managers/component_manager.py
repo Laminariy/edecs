@@ -24,8 +24,8 @@ class ComponentManager():
             # TO DO: fix this error
             raise ComponentAlreadyHaveEntity(component)
 
-        component._id = self._component_count
-        self._component_count+=1
+        #component._id = self._component_count
+        #self._component_count+=1
 
         self._components.append(component)
 

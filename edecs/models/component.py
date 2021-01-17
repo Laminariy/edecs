@@ -63,7 +63,6 @@ class Component():
             raise ComponentAlreadyHaveEntity(self)
 
         self._entity = entity
-        self._id = entity.id
 
     def destroy(self):
         if not self.initialized:

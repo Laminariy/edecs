@@ -5,7 +5,6 @@ class Event():
     __slots__ = ['_sysname', '_type', '_data']
 
     default_event_type = None
-    default_event_data = {}
 
 
     @property
@@ -26,12 +25,8 @@ class Event():
         self._sysname = sysname
         self._data = {}
 
-        if self.default_event_data == {}:
-            for key, value in data.items():
-                self.default_event_data[key] = value
-
-        for key, value in self.default_event_data.items():
-            setattr(self, key, data.pop(key, value))
+        for key, value in data.items():
+            setattr(self, key, value)
 
     def __repr__(self):
         # <Event:event_type>

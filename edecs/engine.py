@@ -90,3 +90,9 @@ class Engine():
             self.loop.create_task(system.a_update(upd_time))
 
         self.loop.run_forever()
+
+    def shutdown(self):
+        systems = self.system_manager.system_types
+
+        for system in systems.values():
+            self.destroy_system(system)

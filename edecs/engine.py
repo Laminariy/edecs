@@ -53,7 +53,7 @@ class Engine():
         self._event_manager.add_event(event)
 
     def get_output(self):
-        return self._event_manager.engine_events
+        return self._event_manager._engine_events
 
     def update(self):
         systems = self.system_manager.system_types
@@ -79,12 +79,26 @@ class Engine():
 
             await asyncio.sleep(0)
 
+    async def a_shutdown_checker(self):
+        while True:
+            engine_events = self.get_output()
+
+            while len(engine_events) > 0:
+                event = engine_events.pop(0)
+
+                if event.type == 'StopEngineEvent':
+                    self.shutdown()
+                    self.loop.stop()
+
+            await asyncio.sleep(0)
+
 
     def a_run(self, upd_time=0):
         systems = self.system_manager.system_types
         self.loop = asyncio.get_event_loop()
 
         self.loop.create_task(self.a_update_events())
+        self.loop.create_task(self.a_shutdown_checker())
 
         for system in systems.values():
             self.loop.create_task(system.a_update(upd_time))

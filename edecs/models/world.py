@@ -148,7 +148,8 @@ class World():
             for type_components in world.components.values():
                 for entity_components in type_components.values():
                     for component in entity_components.values():
-                        yield component
+                        if component not in world.components_del_queue:
+                            yield component
 
         else:
             type_components = world.components.get(component_type)
@@ -158,7 +159,8 @@ class World():
 
             for entity_components in type_components.values():
                 for component in entity_components.values():
-                    yield component
+                    if component not in world.components_del_queue:
+                        yield component
 
     @classmethod
     def delete_component(world, component, immediately=False):
@@ -185,7 +187,7 @@ class World():
         component.entity = None
 
     @classmethod
-    def update_systems(world):
+    def update(world):
         while len(world.components_del_queue) > 0:
             del_component = world.components_del_queue.pop(0)
             world.delete_component(del_component, immediately=True)

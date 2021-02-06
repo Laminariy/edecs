@@ -55,6 +55,12 @@ class LogSystem(System):
             print(component)
             world.delete_component(component)
 
+        print(world.entities)
+        print(world.components)
+        print(world.systems)
+        print(world.dead_entities)
+        print(world.components_del_queue)
+
     def on_finish(self):
         print('LogSystem finished')
 
@@ -66,7 +72,7 @@ def start():
 
     while True:
         sleep(1)
-        world.update_systems()
+        world.update()
 
 
 if __name__ == '__main__':

@@ -25,12 +25,16 @@ class Component():
 
     def __repr__(self):
         # <Component:type; Enity:entity>
-        return "<Component {}:{}; Entity:{}>".format(self.self.type,
+        return "<Component: {}; Entity: {}>".format(self.type,
                                             self.entity if self.entity is None
                                                         else self.entity.type)
 
     def __str__(self):
         # JSON
+        comp_str = "<Component: {}; Entity: {}>\n".format(self.type,
+                                            self.entity if self.entity is None
+                                                        else self.entity.type)
+
         keys = self.defaults.keys()
         data = {}
 
@@ -38,4 +42,4 @@ class Component():
             data[key] = getattr(self, key)
 
         json_string = json.dumps(data, indent=4)
-        return json_string
+        return comp_str + json_string

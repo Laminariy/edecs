@@ -1,6 +1,5 @@
 from copy import deepcopy
 from .exceptions import *
-from . import Entity
 
 
 class World():
@@ -11,6 +10,7 @@ class World():
     systems = {} # {type: system}
 
     dead_entities = []
+    components_del_queue = []
 
     @classmethod
     def create_system(world, system):
@@ -28,6 +28,13 @@ class World():
 
     @classmethod
     def delete_system(world, system):
+        if isinstance(system, str):
+            sys_name = system
+            system = world.systems.get(system)
+
+            if system is None:
+                raise SystemDoesNotExist(sys_name)
+
         if world.systems.get(system.type) is None:
             raise SystemDoesNotExist(system)
 
@@ -40,10 +47,7 @@ class World():
         system.initialized = False
 
     @classmethod
-    def create_entity(world, entity=None):
-        if entity is None:
-            entity = Entity()
-
+    def create_entity(world, entity):
         if entity.initialized:
             raise EntityAlreadyExists(entity)
 
@@ -64,8 +68,6 @@ class World():
             component = deepcopy(component)
             world.add_component(entity, comp_id, component)
 
-        return entity
-
     @classmethod
     def get_entity(world, entity_id):
         if entity_id is None or entity_id >= len(world.entities) or entity_id < 0:
@@ -76,7 +78,8 @@ class World():
     @classmethod
     def get_entities(world):
         for entity in world.entities:
-            yield entity
+            if entity is not None:
+                yield entity
 
     @classmethod
     def delete_entity(world, entity):
@@ -95,7 +98,6 @@ class World():
 
         world.entities[entity.id] = None
         world.dead_entities.append(entity.id)
-        entity.id = None
         entity.initialized = False
 
     @classmethod
@@ -138,30 +140,37 @@ class World():
             if entity is None:
                 raise EntityDoesNotExist(entity_id)
 
-        elif world.get_entity(entity.id) is None:
-            raise EntityDoesNotExist(entity)
-
         return entity.components.get(component_id)
 
     @classmethod
     def get_components(world, component_type=None):
-        result = world.components.get(component_type)
+        if component_type is None:
+            for type_components in world.components.values():
+                for entity_components in type_components.values():
+                    for component in entity_components.values():
+                        yield component
 
-        if result is None:
-            return []
+        else:
+            type_components = world.components.get(component_type)
 
-        for component in result.values().values():
-            yield component
+            if type_components is None:
+                return {}
+
+            for entity_components in type_components.values():
+                for component in entity_components.values():
+                    yield component
 
     @classmethod
-    def delete_component(world, component):
+    def delete_component(world, component, immediately=False):
+        if not immediately:
+            if component not in world.components_del_queue:
+                world.components_del_queue.append(component)
+            return
+
         if not component.initialized:
             raise ComponentHasNoEntity(component)
 
         entity = component.entity
-
-        if world.get_entity(entity.id) is None:
-            raise EntityDoesNotExist(entity)
 
         del entity.components[component.id]
         del world.components[component.type][entity.id][component.id]
@@ -177,5 +186,9 @@ class World():
 
     @classmethod
     def update_systems(world):
+        while len(world.components_del_queue) > 0:
+            del_component = world.components_del_queue.pop(0)
+            world.delete_component(del_component, immediately=True)
+
         for system in world.systems.values():
             system.on_update()

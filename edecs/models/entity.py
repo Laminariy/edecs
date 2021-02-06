@@ -1,4 +1,4 @@
-from . import World as world
+from .world import World as world
 
 
 class Entity():

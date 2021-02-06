@@ -6,23 +6,13 @@ class EntityAlreadyExists(Exception):
     def __str__(self):
         return "Entity {} already exist".format(self.entity)
 
-class EntityNotCreated(Exception):
+class EntityDoesNotExist(Exception):
 
     def __init__(self, entity):
         self.entity = entity
 
     def __str__(self):
-        return "Entity {} not created".format(self.entity)
-
-class EntityAlredyHaveComponent(Exception):
-
-    def __init__(self, entity, component):
-        self.entity = entity
-        self.component = component
-
-    def __str__(self):
-        return "Entity {} already has a component {}".format(self.entity,
-                                                             self.component)
+        return "Entity {} does not exist in world".format(self.entity)
 
 class ComponentAlreadyHaveEntity(Exception):
 
@@ -41,21 +31,37 @@ class ComponentHasNoEntity(Exception):
     def __str__(self):
         return "Component {} has no entity".format(self.component)
 
-class SystemAlreadyExists(Exception):
+class SystemTypeAlreadyExists(Exception):
 
     def __init__(self, system):
         self.system = system
 
     def __str__(self):
-        return "System {} already exists".format(self.system)
+        return "System type {} already exists".format(self.system.type)
 
-class SystemNotCreated(Exception):
+class SystemAlreadyInitialized(Exception):
 
     def __init__(self, system):
         self.system = system
 
     def __str__(self):
-        return "System {} not created".format(self.system)
+        return "System {} already initialized".format(self.system)
+
+class SystemDoesNotExist(Exception):
+
+    def __init__(self, system):
+        self.system = system
+
+    def __str__(self):
+        return "System {} does not exist in world".format(self.system)
+
+class SystemIsNotInitialized(Exception):
+
+    def __init__(self, system):
+        self.system = system
+
+    def __str__(self):
+        return "System {} is not initialized".format(self.system)
 
 class FunctionAlreadySubscribed(Exception):
 

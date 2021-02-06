@@ -1,62 +1,34 @@
 class Event():
-    '''Event class'''
+    '''class for sending events'''
+
+    class _Event():
+        '''inner class for event'''
+        def __init__(self, sender, event_type, event_data={}):
+            self.sender = sender
+            self.event_type = event_type
+            self.event_data = event_data
 
 
-    __slots__ = ['_sysname', '_type', '_data']
-
-    default_event_type = None
-
-
-    @property
-    def type(self):
-        return self._type
-
-    @property
-    def sysname(self): # system name that fire event
-        return self._sysname
-
-    @property
-    def data(self):
-        return self._data
+    def __init__(self):
+        self.event_queue = []
+        self.subscribers = {} # {event_type: fn}
 
 
-    def __init__(self, sysname, event_type=None, data={}):
-        self._type = event_type or self.default_event_type or type(self).__name__
-        self._sysname = sysname
-        self._data = {}
+    def get_event_queue(self):
+        return self.event_queue
 
-        for key, value in data.items():
-            setattr(self, key, value)
+    def get_subscribers(self, event_type):
+        pass
 
-    def __repr__(self):
-        # <Event:event_type>
-        return "<Event:{}".format(self.type)
 
-    def __str__(self):
-        # <Event:event_type>
-        # {data}
-        return "<Event:{}>\n{}".format(self.type, self.data)
+    @staticmethod
+    def subscribe(self, event_type='All', fn=None):
+        pass
 
-    def __getitem__(self, key):
-        return self._data[key]
+    @staticmethod
+    def unsubscribe(self, event_type='All', fn=None):
+        pass
 
-    def __setitem__(self, key, value):
-        self._data[key] = value
-
-    def __delitem__(self, key):
-        self._data.pop(key)
-
-    def __getattr__(self, key):
-        if key in super().__getattribute__('__slots__'):
-            return super().__getattr__(key)
-        else:
-            return self._data[key]
-
-    def __setattr__(self, key, value):
-        if key in super().__getattribute__('__slots__'):
-            super().__setattr__(key, value)
-        else:
-            self._data[key] = value
-
-    def __delattr__(self, key):
-        self._data.pop(key)
+    @staticmethod
+    def fire(self, event_type, event_data={}):
+        pass

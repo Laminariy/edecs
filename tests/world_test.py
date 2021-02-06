@@ -3,6 +3,8 @@ sys.path.append('..')
 from time import sleep
 from edecs import *
 world = World
+event = Event
+msg = Message
 
 class HealthComponent(Component):
 
@@ -37,10 +39,17 @@ class PlayerCreatorSystem(System):
         world.create_entity(tst)
         world.delete_entity(tst)
 
+        event.fire('HiEvent')
+        msg.post('LogSystem', 'HelloMessage')
+
 class LogSystem(System):
 
     def on_start(self):
         print('LogSystem started')
+        event.subscribe('HiEvent', self.hi_event_handler)
+
+    def hi_event_handler(self, ev_type, ev_data):
+        print(ev_type, ev_data)
 
     def on_update(self):
         print('LogSystem updated')
@@ -64,6 +73,9 @@ class LogSystem(System):
     def on_finish(self):
         print('LogSystem finished')
 
+    def on_message(self, msg_id, msg_type):
+        print(msg_id, msg_type)
+
 
 def start():
     log_system = LogSystem()
@@ -73,6 +85,8 @@ def start():
     while True:
         sleep(1)
         world.update()
+        msg.update()
+        event.update()
 
 
 if __name__ == '__main__':

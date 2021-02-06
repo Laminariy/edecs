@@ -1,35 +1,30 @@
 class Message():
     '''class for sending messages'''
 
-    class _Message():
-        '''inner class for message'''
-        def __init__(self, sender, adress, msg_type, msg_data={}):
-            self.sender = sender
-            self.adress = adress
-            self.message_type = msg_type
-            self.message_data = msg_data
+    adresses = {} # {adr: fn}
+    messages = [] # [(adr, mes_id, mes_data), (...)]
 
 
-    def __init__(self):
-        self.message_queue = []
-        self.subscribers = {} # {adress: {msg_type, fn}}
+    @classmethod
+    def update(message):
+        while len(message.messages) > 0:
+            msg = message.messages.pop(0)
+            adr, msg_id, msg_data = msg[0], msg[1], msg[2]
+
+            subscriber = message.adresses.get(adr)
+            if subscriber is not None:
+                subscriber(msg_id, msg_data)
+
+    @classmethod
+    def subscribe(message, adress, fn):
+        message.adresses[adress] = fn
+
+    @classmethod
+    def unsubscribe(message, adress):
+        if adress in message.adresses.keys():
+            del message.adresses[adress]
 
 
-    def get_message_queue(self):
-        return self.message_queue
-
-    def get_subscribers(self, adress):
-        pass
-
-
-    @staticmethod
-    def subscribe(self, msg_type, fn):
-        pass
-
-    @staticmethod
-    def unsubscribe(self, msg_type, fn):
-        pass
-
-    @staticmethod
-    def post(self, adress, msg_type, msg_data):
-        pass
+    @classmethod
+    def post(message, adress, message_id, message_data=None):
+        message.messages.append((adress, message_id, message_data))

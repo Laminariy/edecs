@@ -1,34 +1,42 @@
 class Event():
     '''class for sending events'''
 
-    class _Event():
-        '''inner class for event'''
-        def __init__(self, sender, event_type, event_data={}):
-            self.sender = sender
-            self.event_type = event_type
-            self.event_data = event_data
+    events = [] # [(ev_type, ev_data), (ev_type, ev_data)]
+    subscribers = {} # {event_type: [sub1, sub2, sub3]}
 
 
-    def __init__(self):
-        self.event_queue = []
-        self.subscribers = {} # {event_type: fn}
+    @classmethod
+    def update(event):
+        while len(event.events) > 0:
+            ev = event.events.pop(0)
+            event_type, event_data = ev[0], ev[1]
+            subscribers = event.subscribers.get('_all', []) + event.subscribers.get(event_type, [])
+
+            for subscriber in subscribers:
+                subscriber(event_type, event_data)
 
 
-    def get_event_queue(self):
-        return self.event_queue
+    @classmethod
+    def subscribe(event, event_type, fn):
+        if event.subscribers.get(event_type) is None:
+            event.subscribers[event_type] = []
 
-    def get_subscribers(self, event_type):
-        pass
+        if fn not in event.subscribers[event_type]:
+            event.subscribers[event_type].append(fn)
 
+    @classmethod
+    def unsubscribe(event, event_type, fn):
+        if event.subscribers.get(event_type) is None:
+            return
 
-    @staticmethod
-    def subscribe(self, event_type='All', fn=None):
-        pass
+        if fn not in event.subscribers[event_type]:
+            return
 
-    @staticmethod
-    def unsubscribe(self, event_type='All', fn=None):
-        pass
+        event.subscribers[event_type].remove(fn)
 
-    @staticmethod
-    def fire(self, event_type, event_data={}):
-        pass
+        if len(event.subscribers[event_type]) == 0:
+            del event.subscribers[event_type]
+
+    @classmethod
+    def fire(event, event_type, event_data=None):
+        event.events.append((event_type, event_data))

@@ -1,5 +1,6 @@
 from copy import deepcopy
 from .exceptions import *
+from .message import Message as msg
 
 
 class World():
@@ -23,6 +24,7 @@ class World():
         world.systems[system.type] = system
         system.initialized = True
 
+        msg.subscribe(system.type, system.on_message)
         system.on_start()
 
 
@@ -41,6 +43,7 @@ class World():
         if not system.initialized:
             raise SystemIsNotInitialized(system)
 
+        msg.unsubscribe(system.type)
         system.on_finish()
 
         world.systems.pop(system.type)

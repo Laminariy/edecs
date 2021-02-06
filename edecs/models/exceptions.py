@@ -62,23 +62,3 @@ class SystemIsNotInitialized(Exception):
 
     def __str__(self):
         return "System {} is not initialized".format(self.system)
-
-class FunctionAlreadySubscribed(Exception):
-
-    def __init__(self, fn, event_type):
-        self.fn = fn
-        self.event_type = event_type
-
-    def __str__(self):
-        return "Function {} already subscribed to the event {}".format(self.fn,
-                                                                self.event_type)
-
-class FunctionNotSubscribed(Exception):
-
-    def __init__(self, fn, event_type):
-        self.fn = fn
-        self.event_type = event_type
-
-    def __str__(self):
-        return "Function {} not subscribed to the event {}".format(self.fn,
-                                                                self.event_type)

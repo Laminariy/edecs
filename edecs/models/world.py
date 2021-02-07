@@ -10,6 +10,9 @@ class World():
     components = {} # {type: ent_id: comp_id: comp}
     systems = {} # {type: system}
 
+    systems_to_start = []
+    systems_to_finish = []
+
     dead_entities = []
     components_del_queue = []
 
@@ -25,7 +28,7 @@ class World():
         system.initialized = True
 
         msg.subscribe(system.type, system.on_message)
-        system.on_start()
+        world.systems_to_start.append(system)
 
 
     @classmethod
@@ -44,7 +47,8 @@ class World():
             raise SystemIsNotInitialized(system)
 
         msg.unsubscribe(system.type)
-        system.on_finish()
+        # TO DO: unsubscribe system from all events
+        world.systems_to_finish.append(system)
 
         world.systems.pop(system.type)
         system.initialized = False
@@ -194,6 +198,14 @@ class World():
         while len(world.components_del_queue) > 0:
             del_component = world.components_del_queue.pop(0)
             world.delete_component(del_component, immediately=True)
+
+        while len(world.systems_to_start) > 0:
+            system = world.systems_to_start.pop(0)
+            system.on_start()
+
+        while len(world.systems_to_finish) > 0:
+            system = world.systems_to_finish.pop(0)
+            system.on_finish()
 
         for system in world.systems.values():
             system.on_update()

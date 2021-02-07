@@ -1,27 +1,22 @@
 # Component
 
+Базовый класс для описания компонентов сущности.
+
 ## Атрибуты
 
 ### `type`
 
-Тип компонента.
+Тип компонента - имя класса.
 
-Задается либо при создании:
+### `id`
 
-```python
-health_component = HealthComponent(component_type='HealthComponent')
-```
-
-Либо при объявлении:
+Идентификатор (ключ) компонента. По этому ключу можно обратиться к компоненту сущности:
 
 ```python
-from edecs import Component
-
-class HealthComponent(Component):
-    default_component_type = 'HealthComponent'
+player = PlayerEntity()
+player['health']
+player.health
 ```
-
-По умолчанию, если не указывать тип, то будет использоваться имя класса.
 
 ### `entity`
 
@@ -31,9 +26,7 @@ class HealthComponent(Component):
 
 True, если закреплен за сущностью. Иначе - False.
 
-## Варианты создания
-
-### Через наследование:
+## Создание:
 
 ```python
 from edecs import Component
@@ -45,7 +38,7 @@ class HealthComponent(Component):
         }
 ```
 
-#### Модификация
+### Модификация
 
 Теперь, при создании экземпляра HealthComponent, мы можем изменять значения его атрибутов.
 
@@ -53,52 +46,19 @@ class HealthComponent(Component):
 health = HealthComponent(max_hp=20, hp=20)
 ```
 
-### Создание в коде:
-
-```python
-from edecs import Component
-
-def create_health_component(max_hp, hp):
-    health_component = Component(component_type='HealthComponent', max_hp=max_hp, hp=hp)
-    return health_component
-```
-
 # Entity
+
+Базовый класс для описания сущностей.
 
 ## Атрибуты
 
 ### `type`
 
-Тип сущности.
-
-Задается либо при создании:
-
-```python
-hero = Hero(name='Brave Knight', entity_type='Hero')
-```
-
-Либо при объявлении:
-
-```python
-from edecs import Entity
-
-class Hero(Entity):
-    default_entity_type = 'Hero'
-```
-
-По умолчанию, если не указывать тип, то будет использоваться имя класса.
+Тип сущности - имя класса.
 
 ### `id`
 
-Идентификатор сущности. Уникален для каждой сущности. Присваивается при добавлении сущности в "мир" (при создании через system.create_entity())
-
-### `name`
-
-Имя сущности. Обязательный параметр при создании объекта конкретной сущности.
-
-```python
-hero = Hero('Brave Knight')
-```
+Идентификатор сущности. Уникален для каждой сущности. Присваивается при добавлении сущности в мир.
 
 ### `components`
 
@@ -106,11 +66,9 @@ hero = Hero('Brave Knight')
 
 ### `initialized`
 
-True, если сущность создана и находится в "мире". Иначе False.
+True, если сущность создана и находится в мире. Иначе False.
 
-## Варианты создания
-
-### Через наследование:
+## Создание:
 
 ```python
 from edecs import Entity
@@ -118,330 +76,63 @@ from components import HealthComponent
 
 class Hero(Entity):
     default_components = {
-        'health': HealthComponent()
+        'health': HealthComponent(max_hp=100)
     }
 
-```
-
-```python
-hero = Hero('Brave Knight')
-```
-
-### Создание в коде
-
-```python
-from edecs import Entity
-from components import HealthComponent
-
-def create_hero():
-    hero = Entity(name='Brave Knight', entity_type='Hero')
-    hero.health = HealthComponent()
-    # hero['health'] = HealthComponent() - аналогичная запись
-    
-    return hero
-```
-
-# Event
-
-## Атрибуты
-
-### `type`
-
-Тип события.
-
-Задается либо при создании:
-
-```python
-attack_event = AttackEvent(event_type='AttackEvent')
-```
-
-Либо при объявлении:
-
-```python
-from edecs import Event
-
-class AttackEvent(Event):
-    default_event_type = 'AttackEvent'
-```
-
-По умолчанию, если не указывать тип, то будет использоваться имя класса.
-
-### `sysname`
-
-Тип системы, которая сгенерировала событие, обязательный атрибут.
-
-### `data`
-
-Словарь. Данные, передаваемые вместе с событием.
-
-Задается либо при создании:
-
-```python
-attack_event = AttackEvent(event_type='AttackEvent', data={'damage':5})
-```
-
-```python
-attack_event = AttackEvent(event_type='AttackEvent', damage=5)
-```
-
-Либо при объявлении:
-
-```python
-from edecs import Event
-
-class AttackEvent(Event):
-    default_event_data = {
-        'damage': 5
-    }
 ```
 
 # System
 
+Базовый класс для систем - обработчиков игрового мира.
+
 ## Атрибуты
 
 ### `type`
 
-Тип системы.
-
-Задается либо при создании:
-
-```python
-combat_system = CombatSystem(system_type='CombatSystem')
-```
-
-Либо при объявлении:
-
-```python
-from edecs import System
-
-class CombatSystem(System):
-    default_system_type = 'CombatSystem'
-```
-
-По умолчанию, если не указывать тип, то будет использоваться имя класса.
+Тип системы - имя класса.
 
 ### `initialized`
 
-True, если система была создана через Engine, и существует в "мире". Иначе False.
-
-### `entity_manager`
-
-Объект менеджера сущностей.
-
-### `component_manager`
-
-Объект менеджера компонентов.
-
-### `system_manager`
-
-Объект менеджера сущностей.
-
-### `event_manager`
-
-Объект менеджера событий.
+True, если система существует в мире. Иначе False.
 
 ## Методы
 
-### `create_entity(entity)`
+### `on_start()`
 
-Добавляет сущность в "мир". 
+Функция вызываетcя один раз при добавлении системы в мир.
 
-`entity` - объект сущности.
+### `on_update()`
 
-### `destroy_entity(entity)`
+Функция вызывается каждый проход игрового цикла.
 
-Удаляет сущность из "мира".
+### `on_finish()`
 
-`entity` - объект сущности.
+Функция вызывается один раз при удалении системы из мира.
 
-### `generate_event(event_type[, data])`
+### `on_message(msg_type, msg_data)`
 
-Генерирует и отправляет событие.
+Функция вызывается когда системе приходит сообщение
 
-`event_type` - строка, тип события.
+`msg_id` - Идентификатор сообщения
 
-`data` - необязательный параметр. Словарь данных, которые нужно передать вместе с событием.
+`msg_data` - Объект сообщения
 
-### `send_event(event)`
+### `on_event(event_type, event_data)`
 
-Отправляет событие.
+Стандартный хендлер событий.
 
-`event` - объект события.
+`event_type` - Тип события
 
-### `generate_engine_event(event_type[, data])`
+`event_type` - Объект события
 
-Генерирует и отправляет событие в движок.
+# Event
 
-`event_type` - строка, тип события.
+Модуль для работы с событиями.
 
-`data` - необязательный параметр. Словарь данных, которые нужно передать вместе с событием.
+# Message
 
-### `send_engine_event(event)`
+Модуль для работы с сообщениями.
 
-Отправляет событие в движок.
+# World
 
-`event` - объект события.
-
-### `subscribe(fn, event_type)`
-
-Подписывает функцию на событие.
-
-`fn` - функция, которую необходимо подписать на событие. Функция должна принимать только один параметр - event.
-
-`event_type` - строка, типо события, на которое необходимо подписать функцию.
-
-### `unsubscribe(fn, event_type)`
-
-Отписывает функцию от события.
-
-`fn` - функция, которую необходимо отписать.
-
-`event_type` - строка, тип события, от которого нужно отписать функцию.
-
-### `init()`
-
-Функция вызываетя один раз при добавлении системы в "мир".
-
-### `update(dt)`
-
-Функция вызывается каждый проход игрового цикла. 
-
-`dt` - float, время в секундах, прошедшее с последнего обновления.
-
-### `final()`
-
-Функция вызывается один раз при удалении системы из "мира".
-
-# ComponentManager
-
-## Атрибуты
-
-### `components`
-
-Список всех существующих компонентов.
-
-### `component_types`
-
-Двумерный словарь. Ключи внешнего - тип компонента. Ключи вложенного - идентификатор сущности. Значения - объект компонента.
-
-`{'component_type': {'entity_id': Component()}}`
-
-## Методы
-
-### `component_exists(component_type, entity_id)`
-
-Возвращает True, если у сущности присутствует компонент заданного типа.
-
-`component_type` - строка, тип компонента.
-
-`entity_id` - число, идентификатор сущности.
-
-# EntityManager
-
-## Атрибуты
-
-### `entities`
-
-Список всех сущностей. Ключ - идентификатор сущности, значение - объект сущности.
-
-### `entity_types`
-
-Двумерный словарь. Ключи внешнего - тип сущности. Ключи вложенного - идентификатор сущности. Значения - объект сущности.
-
-`{'entity_type': {'entity_id': Entity()}}`
-
-## Методы
-
-### `entity_exists(entity_id)`
-
-Возвращает True, если сущность с указанным айди существует.
-
-# SystemManager
-
-## Атрибуты
-
-### `system_types`
-
-Словарь. Ключ - тип системы, значение - объект системы.
-
-`{'system_type': System()}`
-
-# EventManager
-
-## Атрибуты
-
-### `subscribers`
-
-Словарь подписчиков на события. 
-
-Ключ - тип события, значение - список подписанных функций.
-
-`{'event_type': [fn1, fn2]}`
-
-### `events`
-
-Список событий, находящихся в очереди.
-
-### `engine_events`
-
-Список событий движка, находящихся в очереди.
-
-### `empty`
-
-True, если очередь событий пуста.
-
-# Engine
-
-## Атрибуты
-
-### `entity_manager`
-
-Объект менеджера сущностей.
-
-### `component_manager`
-
-Объект менеджера компонентов.
-
-### `system_manager`
-
-Объект менеджера сущностей.
-
-### `event_manager`
-
-Объект менеджера событий.
-
-## Методы
-
-### `create_system(system)`
-
-Создает систему и запускает ее работу. Добавляет систему в "мир".
-
-`system` - объект системы.
-
-### `destroy_system(system)`
-
-Удаляет систему, останавливает ее работу. Удаляет систему из "мира".
-
-`system` - объект системы
-
-### `generate_input([event_type, data])`
-
-Генерирует и отправляет событие из движка в системы.
-
-`event_type` - строка, тип события. По умолчанию 'InputEvent'
-
-`data` - словарь с данными, которые необходимо передать вместе с событием.
-
-### `send_input(event)`
-
-Отправляет событие из движка в системы.
-
-`event` - объект события.
-
-### `get_output()`
-
-Возвращает список событий, отправленных из систем движку.
-
-### `update()`
-
-Один проход игрового цикла. Вызывает метод update() у всех систем. Рассылает все события из очереди.
+Модуль для работы с миром.

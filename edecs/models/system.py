@@ -23,7 +23,7 @@ class System():
         pass
 
 
-    def on_message(self, msg_type, msg_data):
+    def on_message(self, msg_id, msg_data):
         pass
 
     def on_event(self, event_type, event_data):

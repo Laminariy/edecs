@@ -1,6 +1,7 @@
 import sys
 sys.path.append('..')
 from time import sleep
+import asyncio
 from edecs import *
 world = World
 event = Event
@@ -82,11 +83,24 @@ def start():
     world.create_system(log_system)
     world.create_system(PlayerCreatorSystem())
 
-    while True:
+    '''while True:
         sleep(1)
         world.update()
         msg.update()
-        event.update()
+        event.update()'''
+
+    loop = asyncio.get_event_loop()
+
+    async def game_loop():
+        while True:
+            world.async_update(loop)
+            msg.async_update(loop)
+            event.async_update(loop)
+            await asyncio.sleep(1)
+
+    loop.create_task(game_loop())
+
+    loop.run_forever()
 
 
 if __name__ == '__main__':

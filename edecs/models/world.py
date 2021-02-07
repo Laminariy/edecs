@@ -1,6 +1,8 @@
 from copy import deepcopy
+from asyncio import iscoroutinefunction
 from .exceptions import *
 from .message import Message as msg
+from .event import Event as event
 
 
 class World():
@@ -15,6 +17,8 @@ class World():
 
     dead_entities = []
     components_del_queue = []
+
+    loop = None
 
     @classmethod
     def create_system(world, system):
@@ -47,7 +51,7 @@ class World():
             raise SystemIsNotInitialized(system)
 
         msg.unsubscribe(system.type)
-        # TO DO: unsubscribe system from all events
+        event.unsubscribe_system(system)
         world.systems_to_finish.append(system)
 
         world.systems.pop(system.type)
@@ -209,3 +213,58 @@ class World():
 
         for system in world.systems.values():
             system.on_update()
+
+    @classmethod
+    def async_update(world, loop):
+        if loop != world.loop:
+            world.loop = loop
+
+        while len(world.components_del_queue) > 0:
+            del_component = world.components_del_queue.pop(0)
+            world.delete_component(del_component, immediately=True)
+
+        while len(world.systems_to_start) > 0:
+            system = world.systems_to_start.pop(0)
+            if iscoroutinefunction(system.on_start):
+                loop.create_task(system.on_start())
+
+            else:
+                func = world.create_async_func(system.on_start)
+                loop.create_task(func())
+
+        while len(world.systems_to_finish) > 0:
+            system = world.systems_to_finish.pop(0)
+            if iscoroutinefunction(system.on_finish):
+                loop.create_task(system.on_finish())
+
+            else:
+                func = world.create_async_func(system.on_finish)
+                loop.create_task(func())
+
+        for system in world.systems.values():
+            if not system.is_updating:
+                system.is_updating = True
+                func = world.create_async_update_func(system, system.on_update)
+                loop.create_task(func())
+
+    @staticmethod
+    def create_async_update_func(system, func):
+        if iscoroutinefunction(func):
+            async def async_func():
+                await func()
+                system.is_updating = False
+
+            return async_func
+
+        else:
+            async def async_func():
+                func()
+                system.is_updating = False
+
+            return async_func
+
+    @staticmethod
+    def create_async_func(func):
+        async def async_func():
+            func()
+        return async_func

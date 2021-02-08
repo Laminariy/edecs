@@ -1,7 +1,7 @@
 from asyncio import iscoroutinefunction
 
 
-class Message():
+class message():
     '''class for sending messages'''
 
     adresses = {} # {adr: fn}

@@ -1,7 +1,7 @@
 from asyncio import iscoroutinefunction
 
 
-class Event():
+class event():
     '''class for sending events'''
 
     events = [] # [(ev_type, ev_data), (ev_type, ev_data)]

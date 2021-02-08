@@ -2,9 +2,7 @@ import sys
 sys.path.append('..')
 from time import sleep
 from edecs import *
-world = World
-event = Event
-msg = Message
+msg = message
 
 class HealthComponent(Component):
 

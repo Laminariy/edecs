@@ -1,11 +1,11 @@
 from copy import deepcopy
 from asyncio import iscoroutinefunction
 from .exceptions import *
-from .message import Message as msg
-from .event import Event as event
+from .message import message as msg
+from .event import event
 
 
-class World():
+class world():
     ''' World class'''
 
     entities = [] # [id: entity]
@@ -133,6 +133,11 @@ class World():
 
         if type_components.get(entity.id) is None:
             type_components[entity.id] = {}
+
+        if entity.components.get(component_id) is not None:
+            old_component = entity.components[component_id]
+            old_component.id = None
+            old_component.entity = None
 
         entity_type_components = type_components[entity.id]
         entity_type_components[component_id] = component

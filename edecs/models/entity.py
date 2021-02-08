@@ -1,4 +1,4 @@
-from .world import World as world
+from .world import world
 
 
 class Entity():
@@ -9,11 +9,15 @@ class Entity():
     default_components = {}
 
 
-    def __init__(self):
+    def __init__(self, **default_components):
         self.type = type(self).__name__
         self.id = None
         self.initialized = False
         self.components = {}
+
+        if self.default_components == {}:
+            for key, value in default_components.items():
+                self.default_components[key] = value
 
     def __repr__(self):
         return "<Entity {}: {}>".format(self.id, self.type)

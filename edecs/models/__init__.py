@@ -1,10 +1,10 @@
-from .event import Event
-from .message import Message
+from .event import event
+from .message import message
 
 from .entity import Entity
 from .component import Component
 from .system import System
 
-from .world import World
+from .world import world
 
 from .exceptions import *

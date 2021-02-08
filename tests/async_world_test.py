@@ -2,9 +2,7 @@ import sys
 sys.path.append('..')
 import asyncio
 from edecs import *
-world = World
-event = Event
-msg = Message
+msg = message
 
 class HealthComponent(Component):
 

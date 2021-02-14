@@ -9,8 +9,8 @@ class Entity():
     default_components = {}
 
 
-    def __init__(self, **default_components):
-        self.type = type(self).__name__
+    def __init__(self, type=None, **default_components):
+        self.type = type or type(self).__name__
         self.id = None
         self.initialized = False
         self.components = {}

@@ -11,8 +11,8 @@ class Component():
         return self.entity is not None
 
 
-    def __init__(self, **properties):
-        self.type = type(self).__name__
+    def __init__(self, type=None, **properties):
+        self.type = type or type(self).__name__
         self.id = None
         self.entity = None
 
